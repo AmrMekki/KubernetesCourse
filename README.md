@@ -162,7 +162,9 @@ Kubectl is used to deal with any type of cluster
 
 ### Installation of Kubectl
 > Minikube requires a Hypervisor
+
 [Minikube Installation](https://minikube.sigs.k8s.io/docs/start/)
+
 [Kubectl Installation](https://kubernetes.io/docs/tasks/tools/)
 
 After installing try in CLI `kubectl`
@@ -175,6 +177,41 @@ Run `kubectl get nodes`
 > Shows minikube node
 
 ## 6. Main Kubectl Commands - K8s CLI
+
+### Commands
+Inside Kubectl
+1. `kubectl get nodes` Shows all nodes
+2. `kubectl get pod` Shows all pods
+3. `kubectl get services` Shows all services
+
+Default creates one pod (one replica)
+4. `kubectl create deployment nginx-depl --image=nginx` This downloads latest nginx image from docker hub
+  - `kubectl get deployment` will show our `nginx-depl`
+  - `kubectl get pod` shows a pod now
+Layers:
+- Deployment manages..
+  - ReplicaSet manages..
+    - Pod is an abstraction of..
+      - Container    
+Everything under deployment is managed by kubernetes
+
+5. `kubectl edit deployment [name]` To get auto generated onfiguration file with default values
+
+#### Debugging
+6. `kubectl logs [pod name]` Helps with debugging when errors are there
+7. `kubectl describe pod [pod name]` If pod isn't running yet
+8. `kubectl exec -it [pod name] --bin/bash` Gets terminal of Pod
+
+#### Delete deployment
+9. `kubectl delete deplyment [name]`
+
+#### Use configuration file for CRUD
+10. `kubectl apply -f [file name]` ex: `nginx-deployment.yaml`
+  - `kubectl nginx-deployment.yaml`
+  - `vim nginx-deployment.yaml` You will see the basic config for the depl
+  - `kubectl apply -f ngin-deployment.yaml` after configuring to confirm
+  - If config file doesn't exist we make a new one but if it exists we can edit
+
 
 ## 7. K8s YAML Configuration File
 
