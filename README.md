@@ -162,10 +162,8 @@ Kubectl is used to deal with any type of cluster
 
 ### Installation of Kubectl
 > Minikube requires a Hypervisor
-
-[Minikube Installation](https://minikube.sigs.k8s.io/docs/start/)
-
-[Kubectl Installation](https://kubernetes.io/docs/tasks/tools/)
+- [Minikube Installation](https://minikube.sigs.k8s.io/docs/start/)
+- [Kubectl Installation](https://kubernetes.io/docs/tasks/tools/)
 
 After installing try in CLI `kubectl`
 
@@ -214,6 +212,30 @@ Everything under deployment is managed by kubernetes
 
 
 ## 7. K8s YAML Configuration File
+### The 3 parts of configuration files
+1. Metadata
+2. Specifications
+3. Status (Automatically generated and edited by Kubernetes)
+
+### Connecting Deployments to Service to Pods
+```
+spec:
+  selector:
+    app: nginx
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+```
+DB Service --port80--> nginx Service --port8080--> Pod
+
+`kubectl describe sevice [service name]` to check targetPort and Endpoints
+
+`kubectl get pod -o wide`
+
+To check status
+`kubectl get deployment nginx-deployment -o yaml` this shows the yaml file that resides in etcd and will show the status
+`kubectl get deployment nginx-deployment -o yaml > nging-deployment-result.yaml` to save and show status
 
 ## 8. Demo Project: MongoDB and MOngoExpress
 
