@@ -365,6 +365,116 @@ kubens my-namespace --changed name
 
 ## 10. K8s Ingress eplained
 
+### What is Ingress
+External Service VS Ingress
+External Service: Through HTTP Protocol (IP address) ex: http://129.1.1.1:8080
+Ingress: Domain (my-app.com)
+
+### Ingress YAML Configuration
+```
+kind: Ingress
+metadata:
+  name: myapp-ingress
+spec:
+  rules:
+  - host: myapp.com  --What user enters in browser
+    http: -- incoming request gets forwarded to internal service
+      paths:
+      - backend:
+          serviceName: myapp-internal-service
+          servicePort: 8080 --Forward request to the internal service
+```
+Host should be
+  - valid domain address
+  - map domanin name to Node's IP address, which is the entrypoint
+
+We also need an implemntation for Ingress called **Ingress Controller**
+Ingress Controller
+- evaluates all the rules
+- manages redirections
+- entrypoing to cluster
+- many third party implementations
+
+If we are using Cloud service provider (AWS, Google Cloud, Linode...):
+Has out-of-the-box K8 solutions
+External Req --> Cloud Load Blanacer --> Ingress Controller (but can be configured in other ways)
+> Advantage: dont have to implement load balancer yourself
+
+If using Bare Metal: you need to configure some kind of entrypoint
+either inside the cluster or outside as a separate server 
+
+We will use Ingress Controller in Minikube
+`minikube addons enable ingress` automatically starts the K8s Nginx implementation of Ingress Controller
+Now we can create Ingress rule
+
+
+### Ingress Controller|
+
+>In minikube cluster
+`kubectl get all -n kubernetes-dashboard`
+
+in file `dashboard-ingress.yaml` we setup config
+then `kubectl apply -f dashboard-ingress.yaml`
+then `kubectl ingress -n kubernetes-dashboard` but address isn't assigned yet it takes time
+
+after we see the address we will map it after editing `sudo vim /etc/hosts`
+
+Ingress default backend
+if we run `kubectl describe ingress dashboard-ingress -n kubernetes-dashboard`
+we will find a default backend: default-http-backend:80
+basically to make error handler if user enters wrong url
+
+### Multiple paths for same host
+```
+.
+.
+.
+    -host: myapp.com
+      http:
+      paths:
+      - path: /analytics
+        .
+        .
+        .
+      - path: /shopping
+```
+or sometimes subdomains having `analytics.myapp.com` instead of `myapp.com/analytics`
+instead we will have multiple hosts each representing a subdomain
+```
+.
+.
+.
+    - host: analytics.myapp.com
+        .
+        .
+        .
+    - host: shopping.myapp.com
+        .
+        .
+        .
+```
+
+### Configuring TLS Certificate - https//
+```
+.
+.
+.
+spec:
+  tls:
+  - hosts:
+    - myapp.com
+    secretName: myapp=secret-tls
+  .
+  .
+  .
+
+```
+and inside the key file the data keys need to be `tls.crt` and `tls.key`
+values are file contents **NOT** file paths/locations
+secret component must be in the same namespace as the Ingress component
+
+
+
 ## 11. Helm Package Manager
 
 ## 12. Persisting Data in K8s with Volumes
