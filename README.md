@@ -137,7 +137,44 @@ Master nodes have less resource usage, if more resources are needed for masters 
 
 ## 5. Minikube and kubectl - Local Setup
 
-## 6. Main Kubectl Commans - K8s CLI
+### What is Minikube
+Production Cluster Setup (Multiple Master and Worker nodes)
+Where to Test?
+
+Minikube is a Node with **Master processes** and **Worker processes** that works on your laptop through a virtual box
+So..
+
+#### Minikube:
+- creates Virtual Box on your laptop
+- Node runs in that Virtual Box
+- 1 Node K8s cluster
+- for testing purposes 
+
+### What is Kubectl
+
+Master processes communicate through API Server
+API Server has 3 clients
+  - UI
+  - API
+  - CLI (KUBECTL) <-- What we will be using
+
+Kubectl is used to deal with any type of cluster
+
+### Installation of Kubectl
+> Minikube requires a Hypervisor
+[Minikube Installation](https://minikube.sigs.k8s.io/docs/start/)
+[Kubectl Installation](https://kubernetes.io/docs/tasks/tools/)
+
+After installing try in CLI `kubectl`
+
+Create and Start Cluster
+`minikube start --vm-driver=hyperkit`
+> Minikube cluster is set up
+
+Run `kubectl get nodes`
+> Shows minikube node
+
+## 6. Main Kubectl Commands - K8s CLI
 
 ## 7. K8s YAML Configuration File
 
