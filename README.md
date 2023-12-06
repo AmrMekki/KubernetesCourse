@@ -477,6 +477,73 @@ secret component must be in the same namespace as the Ingress component
 
 ## 11. Helm Package Manager
 
+### What is Helm
+Package Manager for Kubernetes
+
+### What are Helm Charts
+A bundle of yaml files so that only one person configure instead of rebuilding the wheel
+so we can create and use online Helms
+
+It is also a templating engine
+When we have multiple microservices we will have multiple yaml files
+But those yaml files all share most of the values
+In a template file we can have
+1. Define a common blueprint
+2. Dynamic values are replaces by placeholders
+Template YAML config
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: {{ .Values.name}}
+spec:
+  containers:
+  - name: {{ .Values.container.name}}
+  - image: {{ .Values.container.image}}
+  - port: {{ .Values.container.port}}
+```
+values.yaml
+```
+name: my-app
+container:
+  name: my-app-container
+  image: my-app-image
+  port: 9001
+```
+
+
+Another use case
+same Applications across different environments
+Instead of having a yaml file for each of Development, Staging, and Production
+we can have one chart to deploy multiple environments
+
+### Helm Chart Structure
+```
+mychart/ -- name of chart
+  Chart.yaml --meta info about chart
+  values.yaml --values for template files (default values that we can override)
+  charts/ --chart dependencies
+  templates --the actual template files
+```
+`helm install <chartname>`
+
+
+### Helm Release Managements
+
+Helm v2 comes in 2 parts
+- Client (helm CLI)   --> `helm install <chartname>` to go to server
+- Server (Tiller)
+Keeps track of all chart executions
+- Changes are applied to existing deployment instead of creating a new one
+- Handling rollbacks
+
+Downside:
+- Tiller has too much power inside of K8s cluster
+- Security Issue
+
+in Helm v3 Tiller got removed
+
+
 ## 12. Persisting Data in K8s with Volumes
 
 ## 13. Deploying Statefu Apps with StatefulSet
