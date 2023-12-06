@@ -237,7 +237,80 @@ To check status
 `kubectl get deployment nginx-deployment -o yaml` this shows the yaml file that resides in etcd and will show the status
 `kubectl get deployment nginx-deployment -o yaml > nging-deployment-result.yaml` to save and show status
 
-## 8. Demo Project: MongoDB and MOngoExpress
+## 8. Demo Project: MongoDB and MongoExpress
+
+![Setup we will make](https://github.com/AmrMekki/KubernetesCourse/assets/59305451/d182e3ad-45d2-479b-bc12-932fb75231ba)
+Setup we will make
+
+![Browser Request Flow throught the K8s components](https://github.com/AmrMekki/KubernetesCourse/assets/59305451/2db6638b-ebc0-4f77-86d4-5ae6dddb49ab)
+
+###  Minikube cluster running
+
+#### MongoDB Deployment
+create `mongo.yaml` file with configuration through the docker hub documentation
+
+### Secret
+create `mongo-secret.yaml` file which holds username and password in base64
+`kubectl apply -f mongo-secret.yaml` to have the secret created
+`kubectl get secret` shows secret has been created with name **mongodb-secret**
+
+### Connect Mongo to Secret
+```
+.
+.
+.
+valueFrom:
+  secretKeyRef:
+    name: mongodb-secret
+    key: mongo-root-username
+.
+. --Same for the password
+.
+```
+Now we run `kubectl apply -f mongo.yaml` so deployment is created
+`kubectl get pod --watch` to show the Pod we just created or `kubectl describe` if it takes time
+
+### MongoDB Internal Service
+We go back to `mongo.yaml` and we put deployment and service in 1 file because they belong together
+run `kubectl apply -f monog.yaml`
+> deployment unchanged
+
+run `kubectl get service` to see our created service
+run `kubectl describe service [service name]` to find Endpoints on the right ports
+run `kubectl get pod -o wide`
+run `kubectl get all | grep mongodb` to show all components
+
+### Create MongoExpress Deployment and Service and ConfigMap
+create new `mongo-express.yaml` file for mongoexpress service
+find in docker hub the mongo express config
+and create `mongo-configmap.yaml` and we use it in `mongo-express.yaml` like this
+```
+.
+.
+configMapKeyRef:
+.
+.
+```
+
+now we run `kubectl apply -f mongo-configmap.yaml` first
+then `kubectl apply -f mongo-express.yaml`
+now `kubectl get pod` to see the pod and it is running
+
+### Access MongoDB from a browser
+
+in `mongo-express.yaml` we make an external service for the URL
+  - type: "Loadblanacer"
+    assigns service an externap IP address and so accepts external requests
+  - nodePort: must be between 30000-32767
+    Port for external address port
+Now we run `kubectl apply -f mongo-express.yaml`
+Then `kubectl get service`
+
+`minikube service [service name]` assigns external service an IP address
+
+When we make any changes in URL
+Mongo Express External Service --> Mongo Express Pod --> Mongo DB Internal Service --> Mongo DB Pod
+
 
 ## 9. Organizing your components with K8s Namespaces
 
