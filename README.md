@@ -313,6 +313,55 @@ Mongo Express External Service --> Mongo Express Pod --> Mongo DB Internal Servi
 
 
 ## 9. Organizing your components with K8s Namespaces
+What is a namespace?
+  - We organize resources in namespaces
+  - Virtual cluster inside a cluster
+  - 4 namespaces per default
+
+### create namespace
+`kubectl create namespace my-namespace`
+`kubectl get namespace`
+
+### Why use namespaces?
+
+1. if using only default namespace we will have many resources 
+ex of grouping:
+Namespace:
+  - Database
+  - Monitoring
+  - Elastic Stack
+  - Nginx-Ingress
+Should not use for smaller projects
+
+2. If we have two teams that use the same cluster
+and one team deploys `my-app deployment` that has certain config
+if another team deploys accidentally the same name with different config they overwrite the other config
+So to avoid this conflict we can use namespaces
+
+3. Resources shring
+   re-use components
+   blue/green deployment: in the same cluster we can have two different versions of production
+   but they use the same resources
+
+4. Limit resources and access to namespaces when working with teams
+
+Characteristics of Namespaces:
+  - Each Namespace must define own ConfigMap and Secret
+  - Can share services
+  - Some components can't be created within a Namespace Like **Volumes and Nodes**
+
+### How to create components in a Namespace
+by default, components are in default Namespace
+`kubectl apply -f mysql-configmap.yaml --namespace=my-namespace`
+or do it in config file then `kubectl get configmap -n my-namespace` which is better documented and more convenient for automatic deployment
+
+### How to change active Namespace
+through tool called **Kubens**
+```
+brew install kubens
+kubens
+kubens my-namespace --changed name
+```
 
 ## 10. K8s Ingress eplained
 
