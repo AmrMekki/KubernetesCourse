@@ -580,4 +580,63 @@ It is also claimed by PVC Config
 
 ## 13. Deploying Statefu Apps with StatefulSet
 
+### What is StatefulSet
+Component used for stateful applications
+Like( databases, applications that stores data)
+While stateless applications don't keep records and each request is completely new
+
+Stateless Applications
+- Deployed using deployment
+- replicate your app
+
+Stateful applications
+- Deployed using StatefulSet
+- replicate Pods
+
+### Deployment vs StatefulSet
+- replicating stateful applications is more difficult
+- other requirements
+
+If we have MySQL talking to Java
+and we need to scale that application
+scaling Java is very easy, pods are identical and interchangable, created in random order with random hashes with Load balances
+
+MySQL is more difficult
+- can't be created/deleted at the same time
+- can't be randomly addressed
+- replica pods are not identical
+  - Pod requires Pod Identity
+
+Pod Identity:
+- sticky identity for each pod
+- created from same specification, but not interchangeable
+- persistent identifier across any re-scheduling
+
+Why is the identity necessary?
+Scaling database appications
+1 Pod: for reading and writing
+2 or more Pods: one for writing and reading **MASTER** and others only for reading **Worker Nodes**
+
+StatefulSet: fixed ordered names
+$(Statefulset name)-$(ordinal)
+
+In statefulSet with 3 replica:
+mysql-0 MASTER
+mysql-1 SLAVE
+mysql-2 SLAVE
+
+Can't create mysql-2 without having mysql-0 and mysql-1 running
+Can't delete mysql-1 without deleting mysql-2 first (pop)
+
+So if Pod restarts:
+- IP address changes
+- name and endpoint stays same
+
+It's complex, Kubernetes help you, but you still ned to do a lot
+  - configuring the cloning and data sync
+  - make remote storage available
+  - managing and backup
+
+
+
 ## 14. K8s Services
