@@ -640,3 +640,30 @@ It's complex, Kubernetes help you, but you still ned to do a lot
 
 
 ## 14. K8s Services
+
+### What is a service and when we need it
+
+Each Pod has its own IP address
+- Pods are ephermal - are destroyed frequently
+Service
+- stable IP address
+- loadbalancing
+- loose coupling
+- within and outside cluster
+
+
+1. ClusterIP Services
+  - default type
+Microservice app deployed
+And ingress talks to ClusterIP which
+
+2. Service Communication
+  - Selector
+  - Port
+  - Example -->
+
+3. Multi-Port Services
+
+4. Headless Services 
+
+
