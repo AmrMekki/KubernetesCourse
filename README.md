@@ -546,6 +546,38 @@ in Helm v3 Tiller got removed
 
 ## 12. Persisting Data in K8s with Volumes
 
+### Presistent Volume
+We need to configure a storage that doesn't depend on the pod lifecycle
+Should be available on all nodes
+So we have a presistent volume which is a
+  - cluster resource
+  - created via yaml file
+Can be considered like RAM
+Needs actual physical storage (local disk or cloud storage)
+
+### Presistent Volume Claim
+for a PVC to claim a specific storage through config
+- Pod requests volume throuth the PV claim
+- Claim tries to find a volume in cluster
+- Volume has the actual storage backend
+
+ConfigMap and Secret
+- local volumes
+- not made by PV 
+We can list them in the storage mount
+
+### Storage Class
+Provisions Persistent Volumes dynamically when PCV calims it
+
+StorageBackend is defined in the SC component
+- via `provisioner` attribute
+- each storage backend has own provisioner
+- internal provisioner - "jubernetes.io"
+- external provisioner
+- configure parameters for storage we want to request for PV
+
+It is also claimed by PVC Config
+
 ## 13. Deploying Statefu Apps with StatefulSet
 
 ## 14. K8s Services
